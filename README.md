@@ -1,8 +1,8 @@
 # Contextful
 
-**Highly efficient context management for agentic AI.**
+**Most-efficient Context Management Layer for Agentic AI.**
 
-Contextful is the runtime context layer agents need for real projects. It integrates with Codex, Claude Code, Cursor, Windsurf, GitHub Copilot, VS Code, Cline, Roo Code, Continue, and Zed through MCP, then gives agents one fast way to find, compress, cite, and remember project context.
+Contextful is a runtime contextual layer agents need for real projects. Available as an MCP, it integrates with Codex, Claude Code, Cursor, Windsurf, GitHub Copilot, VS Code, Cline, Roo Code, Continue, and Zed, then gives agents one fast way to find, compress, cite, and remember project context.
 
 Instead of making an agent read 40 files every session, Contextful indexes the project once and returns a ranked, cited, token-budgeted **context pack**.
 
@@ -13,9 +13,9 @@ Instead of making an agent read 40 files every session, Contextful indexes the p
 - **No lost context between sessions:** agents can store session learnings in an evidence-backed memory ledger.
 - **Shareable project knowledge:** lessons and context packs survive context compaction and future sessions.
 
-## Core Features
+## Core
 
-### Solid Search Engine
+### Search Engine
 
 Contextful analyzes the query, classifies intent, and combines lexical search, symbols, docs, graph relationships, and memory hits to retrieve the right evidence. The goal is Google-level project search for agents: vague queries like "resources for auth onboarding" should still land on the right code, docs, and prior lessons.
 
