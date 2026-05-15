@@ -1,4 +1,6 @@
-# Contextful
+![contextful cover image](docs/cover.svg)
+
+# contextful
 
 **Most-efficient Context Management Layer for Agentic AI.**
 
