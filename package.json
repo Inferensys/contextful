@@ -1,0 +1,77 @@
+{
+  "name": "@inferensys/contextful",
+  "version": "0.1.0",
+  "description": "Highly efficient context management for agentic AI: search, evidence packs, and memory for Claude Code, Codex, Cursor, Windsurf, and Copilot.",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "cxf": "dist/cli.js",
+    "contextful": "dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "docs",
+    "README.md",
+    "LICENSE",
+    "server.json",
+    "tests/fixtures"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "check": "npm run build && npm run test",
+    "prepare": "npm run build",
+    "prepack": "npm run check"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "context",
+    "context-management",
+    "token-efficiency",
+    "agentic-ai",
+    "code-search",
+    "evidence-packs",
+    "codebase",
+    "agent-memory",
+    "codex",
+    "claude-code",
+    "cursor",
+    "windsurf",
+    "github-copilot",
+    "vscode",
+    "cline",
+    "roo-code",
+    "continue",
+    "zed"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "better-sqlite3": "^12.10.0",
+    "commander": "^14.0.3",
+    "fast-glob": "^3.3.3",
+    "ignore": "^7.0.5",
+    "tree-sitter-wasms": "^0.1.13",
+    "web-tree-sitter": "^0.20.8",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/node": "^25.8.0",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.6"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "homepage": "https://inferensys.github.io/contextful/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Inferensys/contextful.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Inferensys/contextful/issues"
+  },
+  "mcpName": "io.github.Inferensys/contextful"
+}

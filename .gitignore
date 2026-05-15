@@ -1,0 +1,6 @@
+node_modules/
+dist/
+.contextful/
+coverage/
+.DS_Store
+*.tgz
