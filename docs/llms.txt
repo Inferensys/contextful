@@ -1,0 +1,47 @@
+# Contextful
+
+Contextful is a local-first MCP context management layer for AI coding agents.
+
+Primary site: https://inferensys.github.io/contextful/
+GitHub: https://github.com/Inferensys/contextful
+npm: https://www.npmjs.com/package/@inferensys/contextful
+MCP name: io.github.Inferensys/contextful
+Package: @inferensys/contextful
+CLI: cxf
+
+## What Contextful Does
+
+Contextful indexes one workspace and returns ranked, cited, token-budgeted evidence packs through MCP tools. It helps Codex, Claude Code, Cursor, Windsurf, GitHub Copilot, VS Code, Cline, Roo Code, Continue, Zed, and other MCP clients find project context without repeatedly reading raw files.
+
+## Key Features
+
+- MCP stdio server for coding agents.
+- CLI for indexing, querying, reports, memory writes, and local smoke tests.
+- Local SQLite state under .contextful/.
+- FTS5 and BM25 lexical search over code, docs, symbols, and memories.
+- Typed graph tables for files, chunks, symbols, graph nodes, graph edges, node props, and edge props.
+- context_pack tool returning summaries, citations, files, symbols, graph paths, memory hits, confidence, and token estimates.
+- Evidence-backed memory ledger. Memory writes require valid evidence refs.
+- Local-first v1. No hosted embeddings, no source-code uploads, no source edits, and no dependency installation inside the target workspace.
+
+## Core MCP Tools
+
+- context_pack(query, budget, scope)
+- search_code(query, mode, filters)
+- trace_path(from, to, edge_types)
+- impact_analysis(symbol_or_file)
+- why_changed(symbol_or_file)
+- recall_memory(query, scope)
+- write_lesson(claim, evidence_refs, scope)
+
+## Install
+
+```bash
+npx @inferensys/contextful index --workspace .
+npx @inferensys/contextful query "where is auth handled" --workspace . --budget 2000
+codex mcp add contextful -- npx -y @inferensys/contextful server
+```
+
+## Best Short Description
+
+Contextful is a local-first MCP context engine for coding agents. It combines code search, graph context, token-budgeted evidence packs, and evidence-backed memory so agents can understand large projects without repeatedly reading the same files.
