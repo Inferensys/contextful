@@ -2,6 +2,8 @@
 
 # *Contextful*
 
+⚠️ This is in early alpha. The API, features, and integrations are not stable. Expect breaking changes. Feedback & contributions are very welcome!
+
 **Local Context Management + Search Engine + Memory for Agentic AI.**
 
 Contextful is a runtime contextual layer and local search engine for agents that gives them one fast way to find, compress, cite, and remember project context.
@@ -9,7 +11,6 @@ Contextful is a runtime contextual layer and local search engine for agents that
 Available as a CLI-first tool with an MCP runtime bridge and generated agent instructions, it integrates seamlessly with Codex, Claude Code, Cursor, Windsurf, GitHub Copilot, VS Code, Cline, Roo Code, Continue, and Zed.
 
 <img src="docs/supported.png" alt="Contextful screenshot" width="450px" style="border-radius: 20px;" />
-
 
 Instead of making an agent read 40 files every session, Contextful indexes the project once and returns a ranked, cited, token-budgeted **context pack**.
 
