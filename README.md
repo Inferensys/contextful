@@ -2,11 +2,11 @@
 
 # *Contextful*
 
-**Context Management + Search Engine for Agentic AI.**
+**Local Context Management + Search Engine + Memory for Agentic AI.**
 
-Contextful is a runtime contextual layer & local search engine for agents that gives them one fast way to find, compress, cite, and remember project context. 
+Contextful is a runtime contextual layer and local search engine for agents that gives them one fast way to find, compress, cite, and remember project context.
 
-Available as a `cli` + MCP & Skill, it integrates seemlessly with Codex, Claude Code, Cursor, Windsurf, GitHub Copilot, VS Code, Cline, Roo Code, Continue, and Zed.
+Available as a CLI-first tool with an MCP runtime bridge and generated agent instructions, it integrates seamlessly with Codex, Claude Code, Cursor, Windsurf, GitHub Copilot, VS Code, Cline, Roo Code, Continue, and Zed.
 
 <img src="docs/supported.png" alt="Contextful screenshot" width="450px" style="border-radius: 20px;" />
 
@@ -15,9 +15,9 @@ Instead of making an agent read 40 files every session, Contextful indexes the p
 
 ## Why?
 
-Context has always been a bottleneck for agentic AI. Large context window models (eg. 1m tokens) are :
+Context has always been a bottleneck for agentic AI. Large context window models (for example, 1M tokens) are:
 1. Expensive and require significantly more compute & processing time.
-2. Halucinate & loose key information as context window fills up. 
+2. More likely to lose key information as the context window fills up.
 3. Most projects have millions of lines of code, but agents can only fit in limited tokens per context window.
 
 The current solution is to make the agent guess which files to read, then pay the token cost to read them every session. This is slow, expensive, and lossy.
@@ -26,7 +26,7 @@ Apart from this, agents have no way to store or share learnings across sessions.
 
 <img src="docs/context-window.png" alt="Contextful screenshot" width="450px" style="border-radius: 20px;" />
 
-I started developing Contextful to keep context window smaller by enabling efficient knowledge retrieval. We can index the project and return a ranked, cited, token-budgeted context pack, we can:
+I started developing Contextful to keep the context window smaller by enabling efficient knowledge retrieval. If we index the project and return a ranked, cited, token-budgeted context pack, we can:
 - **100x more efficient token usage:** stop paying tokens to re-read the same files.
 - **Fewer tool calls:** one context pack can replace dozens of grep, glob, and read-file calls.
 - **No lost context between sessions:** agents can store session learnings in an evidence-backed memory ledger.
@@ -65,15 +65,15 @@ Contextful is an MCP server, local indexer, and small CLI:
 
 - **MCP server:** the agent interface.
 - **Local daemon / watcher:** indexing, rebuilds, freshness, and future benchmarks.
-- **CLI (`cxf`):** human debugging, reports, memory writes, and local smoke tests.
+- **CLI (`cxf`):** human setup, indexing, search, memory writes, and local smoke tests.
 
 MCP is the right interface because tools, resources, and prompts are exactly what MCP standardizes. The agent asks for context; Contextful returns compact evidence.
 
 ## Install
 
 ```bash
-npx @inferensys/contextful index --workspace .
-npx @inferensys/contextful query "where is user auth handled" --workspace . --budget 2000
+npx @inferensys/contextful init --workspace .
+npx @inferensys/contextful search "where is user auth handled" --workspace . --budget 2000
 ```
 
 Run as an MCP server:
@@ -87,10 +87,10 @@ npx @inferensys/contextful server
 The primary binary is `cxf`; `contextful` is also provided as a readable alias.
 
 ```bash
+cxf init --workspace <path>
 cxf index --workspace <path> [--watch]
 cxf daemon --workspace <path>
-cxf query "<query>" --workspace <path> --budget 2000 --json
-cxf report --workspace <path> --format markdown|json|html
+cxf search "<query>" --workspace <path> --budget 2000 --json
 cxf memory add --workspace <path> --claim <text> --evidence <ref>
 cxf server
 ```
@@ -128,14 +128,17 @@ Codex:
 codex mcp add contextful -- npx -y @inferensys/contextful server
 ```
 
-## Viral Receipts
+## CLI-First Agent Flow
 
-Contextful reports should make the value visible:
+Use `cxf init` once per workspace. It indexes the project and writes `.contextful/AGENT_INSTRUCTIONS.md`, a compact skill-style guide that tells agents when to call `context_pack`, when to search more narrowly, and when memory writes are allowed.
 
-- "Context pack saved 18 tool calls."
-- "100k+ tokens avoided by not re-reading files."
-- "2x faster context gathering."
-- "3 session learnings reused from the memory ledger."
+Use `cxf search` when a human wants to test the same evidence pack an agent will receive:
+
+```bash
+cxf search "how does auth load user profiles?" --workspace . --budget 2000
+```
+
+The MCP server remains the agent interface. The CLI is for setup, inspection, and repeatable local tests.
 
 ## Privacy
 

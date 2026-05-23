@@ -2,12 +2,12 @@
 
 import process from "node:process";
 import { Command } from "commander";
+import { initWorkspace, renderInitSummary } from "./init.js";
 import { indexWorkspace, watchWorkspace } from "./indexer.js";
 import { writeLesson } from "./memory.js";
-import { generateReport, renderEvidencePackMarkdown, renderReport } from "./report.js";
-import { createContextPack, searchContext } from "./search.js";
+import { renderEvidencePackMarkdown } from "./report.js";
+import { createContextPack } from "./search.js";
 import { runMcpServer } from "./mcp-server.js";
-import { type ReportFormat } from "./types.js";
 
 const program = new Command();
 
@@ -15,6 +15,16 @@ program
   .name("cxf")
   .description("Contextful: local-first context search, evidence packs, and memory for coding agents.")
   .version("0.1.0");
+
+program
+  .command("init")
+  .description("Initialize Contextful for a workspace and write agent instructions.")
+  .option("--workspace <path>", "Workspace path.", process.cwd())
+  .option("--json", "Print JSON instead of a human summary.")
+  .action(async (options: { workspace: string; json?: boolean }) => {
+    const result = await initWorkspace({ workspace: options.workspace });
+    process.stdout.write(options.json ? `${JSON.stringify(result, null, 2)}\n` : renderInitSummary(result));
+  });
 
 program
   .command("index")
@@ -41,37 +51,8 @@ program
     });
   });
 
-program
-  .command("query")
-  .description("Create an evidence pack for a query.")
-  .argument("<query>", "Query to answer from indexed context.")
-  .option("--workspace <path>", "Workspace path.", process.cwd())
-  .option("--budget <tokens>", "Approximate token budget.", parseInteger, 2000)
-  .option("--json", "Print JSON instead of Markdown.")
-  .action(async (query: string, options: { workspace: string; budget: number; json?: boolean }) => {
-    const pack = await createContextPack({ workspace: options.workspace, query, budget: options.budget });
-    process.stdout.write(options.json ? `${JSON.stringify(pack, null, 2)}\n` : renderEvidencePackMarkdown(pack));
-  });
-
-program
-  .command("search")
-  .description("Search indexed context without compiling a full evidence pack.")
-  .argument("<query>", "Search query.")
-  .option("--workspace <path>", "Workspace path.", process.cwd())
-  .option("--limit <count>", "Max hits.", parseInteger, 10)
-  .option("--kind <kind>", "all|code|docs|symbols|memory", "all")
-  .action(async (query: string, options: { workspace: string; limit: number; kind: "all" | "code" | "docs" | "symbols" | "memory" }) => {
-    process.stdout.write(`${JSON.stringify(await searchContext({ ...options, query }), null, 2)}\n`);
-  });
-
-program
-  .command("report")
-  .description("Generate a context report.")
-  .option("--workspace <path>", "Workspace path.", process.cwd())
-  .option("--format <format>", "markdown|json|html", "markdown")
-  .action(async (options: { workspace: string; format: ReportFormat }) => {
-    process.stdout.write(renderReport(await generateReport({ workspace: options.workspace }), parseReportFormat(options.format)));
-  });
+addEvidencePackCommand("search", "Search project context and return a token-budgeted evidence pack.");
+addEvidencePackCommand("query", "Alias for search.", true);
 
 const memory = program.command("memory").description("Manage evidence-backed agent memory.");
 
@@ -117,7 +98,16 @@ function parseInteger(value: string): number {
   return parsed;
 }
 
-function parseReportFormat(value: string): ReportFormat {
-  if (value === "markdown" || value === "json" || value === "html") return value;
-  throw new Error(`Unsupported report format: ${value}`);
+function addEvidencePackCommand(name: string, description: string, hidden = false): void {
+  program
+    .command(name, hidden ? { hidden: true } : undefined)
+    .description(description)
+    .argument("<query>", "Query to answer from indexed context.")
+    .option("--workspace <path>", "Workspace path.", process.cwd())
+    .option("--budget <tokens>", "Approximate token budget.", parseInteger, 2000)
+    .option("--json", "Print JSON instead of Markdown.")
+    .action(async (query: string, options: { workspace: string; budget: number; json?: boolean }) => {
+      const pack = await createContextPack({ workspace: options.workspace, query, budget: options.budget });
+      process.stdout.write(options.json ? `${JSON.stringify(pack, null, 2)}\n` : renderEvidencePackMarkdown(pack));
+    });
 }

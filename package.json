@@ -1,7 +1,7 @@
 {
   "name": "@inferensys/contextful",
   "version": "0.1.0",
-  "description": "Highly efficient context management for agentic AI: search, evidence packs, and memory for Claude Code, Codex, Cursor, Windsurf, and Copilot.",
+  "description": "CLI-first context engine for agentic AI: local code search, evidence packs, MCP runtime context, and memory for Claude Code, Codex, Cursor, Windsurf, and Copilot.",
   "type": "module",
   "main": "dist/index.js",
   "bin": {

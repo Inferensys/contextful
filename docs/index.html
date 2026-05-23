@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Contextful | MCP Context Engine for Coding Agents</title>
+    <title>Contextful | Local Context Management + Search Engine + Memory for Coding Agents</title>
     <meta
       name="description"
       content="Contextful is a local-first MCP context management layer for AI coding agents. It gives Codex, Claude Code, Cursor, Windsurf, Copilot, VS Code, Cline, Roo, Continue, and Zed fast code search, context packs, graph context, and evidence-backed memory."
@@ -14,7 +14,7 @@
     />
     <link rel="canonical" href="https://inferensys.github.io/contextful/" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Contextful | MCP Context Engine for Coding Agents" />
+    <meta property="og:title" content="Contextful | Local Context Management + Search Engine + Memory for Coding Agents" />
     <meta
       property="og:description"
       content="Give AI coding agents one ranked, cited, token-budgeted context pack instead of dozens of repeated file reads."
@@ -22,7 +22,7 @@
     <meta property="og:url" content="https://inferensys.github.io/contextful/" />
     <meta property="og:image" content="https://inferensys.github.io/contextful/cover.svg" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Contextful | MCP Context Engine for Coding Agents" />
+    <meta name="twitter:title" content="Contextful | Local Context Management + Search Engine + Memory for Coding Agents" />
     <meta
       name="twitter:description"
       content="Local-first MCP code search, graph context, evidence packs, and memory for agentic AI development."
@@ -54,7 +54,10 @@
           "BM25 lexical search",
           "Typed graph tables for files, symbols, chunks, and edges",
           "Token-budgeted context_pack tool",
-          "Evidence-backed memory ledger"
+          "Evidence-backed memory ledger",
+          "Compatible with Codex, Claude Code, Cursor, Windsurf, GitHub Copilot, VS Code, Cline, Roo Code, Continue, Zed, and any MCP stdio client",
+          "Agentic memory",
+          "Context Management for AI coding agents",
         ]
       }
     </script>
@@ -530,10 +533,11 @@
     <main id="top">
       <section class="hero">
         <div class="shell">
-          <p class="eyebrow">Local-first MCP context management for agentic AI</p>
-          <h1>Contextful gives coding agents the project context they need at runtime.</h1>
+          <p class="eyebrow">grep isn't enough</p>
+          <h1>Give coding agents the context they need, efficiently.</h1>
           <p class="lead">
-            Contextful is a highly efficient context layer for Codex, Claude Code, Cursor, Windsurf, GitHub Copilot,
+            Contextful is a context layer management harness + search engine + cross-session memory for AI coding agents.
+            Available for Codex, Claude Code, Cursor, Windsurf, GitHub Copilot,
             VS Code, Cline, Roo Code, Continue, Zed, and any MCP-compatible coding tool. It indexes your workspace once,
             then returns ranked, cited, token-budgeted evidence packs instead of making agents re-read the same files in
             every session.
@@ -660,7 +664,8 @@ saved roughly 18 follow-up file reads</pre>
           <h2>Built as the runtime layer agents actually use</h2>
           <p class="section-lead">
             Contextful is not a hosted code search product and not a vector-only RAG demo. It is a small local system:
-            a CLI for humans, an indexer for the workspace, a SQLite state store, and an MCP server for the agent.
+            a CLI for setup and search, an indexer for the workspace, a SQLite state store, generated agent instructions,
+            and an MCP server for runtime agent calls.
           </p>
           <div class="flow" aria-label="Contextful architecture flow">
             <div class="step">
@@ -805,10 +810,10 @@ saved roughly 18 follow-up file reads</pre>
               </p>
             </article>
             <article class="tile">
-              <h3>Write better reports</h3>
+              <h3>Test retrieval before the agent uses it</h3>
               <p>
-                Export Contextful reports that show indexed files, language coverage, recent packs, stale memory warnings,
-                and estimated tool calls saved.
+                Run <code>cxf search</code> locally to inspect the same cited evidence pack the agent will receive through
+                MCP.
               </p>
             </article>
             <article class="tile">
@@ -893,13 +898,13 @@ saved roughly 18 follow-up file reads</pre>
         <div class="shell">
           <h2>Install Contextful</h2>
           <p class="section-lead">
-            The npm package ships the <code>cxf</code> CLI and the MCP server. Start by indexing one workspace, then add
-            the server to your agent client.
+            The npm package ships the <code>cxf</code> CLI and the MCP server. Start with <code>init</code>, which indexes
+            the workspace and writes <code>.contextful/AGENT_INSTRUCTIONS.md</code> for your coding agent.
           </p>
           <div class="commands">
-            <pre>npx @inferensys/contextful index --workspace .
-npx @inferensys/contextful query "where is auth handled" --workspace . --budget 2000
-npx @inferensys/contextful report --workspace . --format markdown</pre>
+            <pre>npx @inferensys/contextful init --workspace .
+npx @inferensys/contextful search "where is auth handled" --workspace . --budget 2000
+npx @inferensys/contextful memory add --workspace . --claim "..." --evidence file:src/example.ts:1-20</pre>
             <pre>codex mcp add contextful -- \
   npx -y @inferensys/contextful server
 
@@ -947,11 +952,11 @@ npx -y @inferensys/contextful server</pre>
               </p>
             </details>
             <details>
-              <summary>What makes context_pack different from search?</summary>
+              <summary>How should agents use Contextful?</summary>
               <p>
-                Search returns hits. <code>context_pack</code> returns a ready-to-use bundle: summary, citations, files,
-                symbols, graph paths, memory hits, confidence, and token estimate. It is designed to be the agent's first
-                retrieval call.
+                Agents should call <code>context_pack</code> before broad file exploration. Humans can run
+                <code>cxf search</code> to preview the same kind of ready-to-use bundle: summary, citations, files,
+                symbols, graph paths, memory hits, confidence, and token estimate.
               </p>
             </details>
             <details>

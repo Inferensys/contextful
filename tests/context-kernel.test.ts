@@ -78,21 +78,24 @@ describe("Contextful", () => {
     expect(report.staleMemories.some((item) => item.id === memory.id)).toBe(true);
   });
 
-  it("supports search, report, and impact analysis through the CLI", async () => {
+  it("supports init, search, and impact analysis through the CLI", async () => {
     const workspace = copyFixture();
     const cli = path.join(projectRoot, "dist", "cli.js");
     if (!fs.existsSync(cli)) return;
 
-    execFileSync(process.execPath, [cli, "index", "--workspace", workspace], { encoding: "utf8" });
-    const queryOutput = execFileSync(process.execPath, [cli, "query", "AuthService login", "--workspace", workspace, "--json"], {
-      encoding: "utf8"
-    });
-    expect(JSON.parse(queryOutput).citations.length).toBeGreaterThan(0);
+    const initOutput = execFileSync(process.execPath, [cli, "init", "--workspace", workspace, "--json"], { encoding: "utf8" });
+    const init = JSON.parse(initOutput) as { instructionsPath: string; index: { indexedFiles: number } };
+    expect(init.index.indexedFiles).toBeGreaterThan(0);
+    expect(fs.readFileSync(init.instructionsPath, "utf8")).toContain("context_pack");
 
-    const reportOutput = execFileSync(process.execPath, [cli, "report", "--workspace", workspace, "--format", "markdown"], {
+    const searchOutput = execFileSync(process.execPath, [cli, "search", "AuthService login", "--workspace", workspace, "--json"], {
       encoding: "utf8"
     });
-    expect(reportOutput).toContain("Contextful Report");
+    expect(JSON.parse(searchOutput).citations.length).toBeGreaterThan(0);
+
+    const help = execFileSync(process.execPath, [cli, "--help"], { encoding: "utf8" });
+    expect(help).toContain("search");
+    expect(help).not.toContain("report");
 
     const search = await searchContext({ workspace, query: "loadUserProfile" });
     expect(search.hits.length).toBeGreaterThan(0);

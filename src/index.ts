@@ -1,4 +1,5 @@
 export { indexWorkspace, watchWorkspace } from "./indexer.js";
+export { initWorkspace, renderInitSummary } from "./init.js";
 export { createContextPack, searchContext, searchCode, traceGraph, tracePath, impactAnalysis, whyChanged, getIndexStatus, classifyQuery } from "./search.js";
 export { writeLesson, recallMemory } from "./memory.js";
 export { generateReport, renderReport } from "./report.js";
@@ -13,3 +14,4 @@ export type {
   SearchHit,
   SearchIntent
 } from "./types.js";
+export type { InitResult } from "./init.js";

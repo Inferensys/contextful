@@ -11,12 +11,13 @@ CLI: cxf
 
 ## What Contextful Does
 
-Contextful indexes one workspace and returns ranked, cited, token-budgeted evidence packs through MCP tools. It helps Codex, Claude Code, Cursor, Windsurf, GitHub Copilot, VS Code, Cline, Roo Code, Continue, Zed, and other MCP clients find project context without repeatedly reading raw files.
+Contextful indexes one workspace and returns ranked, cited, token-budgeted evidence packs through the CLI and MCP tools. It helps Codex, Claude Code, Cursor, Windsurf, GitHub Copilot, VS Code, Cline, Roo Code, Continue, Zed, and other MCP clients find project context without repeatedly reading raw files.
 
 ## Key Features
 
 - MCP stdio server for coding agents.
-- CLI for indexing, querying, reports, memory writes, and local smoke tests.
+- CLI-first workflow for initialization, indexing, search, memory writes, and local smoke tests.
+- cxf init writes .contextful/AGENT_INSTRUCTIONS.md with skill-style instructions for coding agents.
 - Local SQLite state under .contextful/.
 - FTS5 and BM25 lexical search over code, docs, symbols, and memories.
 - Typed graph tables for files, chunks, symbols, graph nodes, graph edges, node props, and edge props.
@@ -37,8 +38,8 @@ Contextful indexes one workspace and returns ranked, cited, token-budgeted evide
 ## Install
 
 ```bash
-npx @inferensys/contextful index --workspace .
-npx @inferensys/contextful query "where is auth handled" --workspace . --budget 2000
+npx @inferensys/contextful init --workspace .
+npx @inferensys/contextful search "where is auth handled" --workspace . --budget 2000
 codex mcp add contextful -- npx -y @inferensys/contextful server
 ```
 
