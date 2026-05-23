@@ -1,27 +1,40 @@
 ![contextful cover image](docs/cover.svg)
 
-# contextful
+# *Contextful*
 
-**Most-efficient Context Management Layer for Agentic AI.**
+**Context Management + Search Engine for Agentic AI.**
 
-Contextful is a runtime contextual layer agents need for real projects. Available as an MCP, it integrates with Codex, Claude Code, Cursor, Windsurf, GitHub Copilot, VS Code, Cline, Roo Code, Continue, and Zed, then gives agents one fast way to find, compress, cite, and remember project context.
+Contextful is a runtime contextual layer & local search engine for agents that gives them one fast way to find, compress, cite, and remember project context. 
+
+Available as a `cli` + MCP & Skill, it integrates seemlessly with Codex, Claude Code, Cursor, Windsurf, GitHub Copilot, VS Code, Cline, Roo Code, Continue, and Zed.
+
+<img src="docs/supported.png" alt="Contextful screenshot" width="450px" style="border-radius: 20px;" />
+
 
 Instead of making an agent read 40 files every session, Contextful indexes the project once and returns a ranked, cited, token-budgeted **context pack**.
 
-## Why Agents Need This
+## Why?
 
+Context has always been a bottleneck for agentic AI. Large context window models (eg. 1m tokens) are :
+1. Expensive and require significantly more compute & processing time.
+2. Halucinate & loose key information as context window fills up. 
+3. Most projects have millions of lines of code, but agents can only fit in limited tokens per context window.
+
+The current solution is to make the agent guess which files to read, then pay the token cost to read them every session. This is slow, expensive, and lossy.
+
+Apart from this, agents have no way to store or share learnings across sessions. Every time they start, they forget everything and have to re-read the same context again.
+
+<img src="docs/context-window.png" alt="Contextful screenshot" width="450px" style="border-radius: 20px;" />
+
+I started developing Contextful to keep context window smaller by enabling efficient knowledge retrieval. We can index the project and return a ranked, cited, token-budgeted context pack, we can:
 - **100x more efficient token usage:** stop paying tokens to re-read the same files.
 - **Fewer tool calls:** one context pack can replace dozens of grep, glob, and read-file calls.
 - **No lost context between sessions:** agents can store session learnings in an evidence-backed memory ledger.
 - **Shareable project knowledge:** lessons and context packs survive context compaction and future sessions.
 
-## Core
+## Key Features
 
-### Search Engine
-
-Contextful analyzes the query, classifies intent, and combines lexical search, symbols, docs, graph relationships, and memory hits to retrieve the right evidence. The goal is Google-level project search for agents: vague queries like "resources for auth onboarding" should still land on the right code, docs, and prior lessons.
-
-### Efficient Context Storage
+### 1. Context Management
 
 The default local store is SQLite with FTS-backed search and typed graph tables. V1 ships with:
 
@@ -33,11 +46,20 @@ The default local store is SQLite with FTS-backed search and typed graph tables.
 
 The next storage upgrades are optional semantic vectors through sqlite-vec, LanceDB, or local HNSW, and compressed adjacency lists with Roaring bitmaps or CSR arrays for larger repositories.
 
-### Memory Ledger
+
+### 2. Search Engine
+
+<img src="docs/grep-vs-vector.png" alt="Contextful screenshot" width="450px" style="border-radius: 20px;" />
+
+Contextful analyzes the query, classifies intent, and combines lexical search, symbols, docs, graph relationships, and memory hits to retrieve the right evidence. The goal is Google-level project search for agents: vague queries like "resources for auth onboarding" should still land on the right code, docs, and prior lessons.
+
+
+
+### 3. Memory Ledger
 
 Agents can store lessons, decisions, and useful project facts, but not as loose "remember this" notes. Every memory requires evidence refs from files, symbols, commits, or prior context packs. When the evidence changes, Contextful marks the memory stale.
 
-### Runtime Architecture
+### 4. Contextful Execution
 
 Contextful is an MCP server, local indexer, and small CLI:
 
